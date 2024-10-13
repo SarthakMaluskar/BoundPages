@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "105056301967",
+    "project_id": "boundpages-d60fa",
+    "storage_bucket": "boundpages-d60fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105056301967:android:33e6b533b16dfee23051fa",
+        "android_client_info": {
+          "package_name": "com.example.boundpages_final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASSjfWH8Si35UtrbdUN7EC_o6h4UnPzks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
