@@ -1,11 +1,14 @@
+import 'package:boundpages_final/features/user_auth/presentation/pages/mainpage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // Import Firebase Auth
+import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart';
 import 'package:boundpages_final/features/app/splash_screen/splash_screen.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/homepage.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/login_page.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/signup_page.dart';
+import'package:boundpages_final/features/user_auth/presentation/pages/books_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         '/login': (context) => const LoginPage(),
         '/signUp': (context) => const SignUpPage(),
-        '/home': (context) => GenreSelectionScreen(),
+        '/home': (context) =>  GenreSelectionScreen(),
+        '/mainpage':(context) =>  MainPage(),
+        '/profilepage':(context) => Profilepage(),
 
       },
     );

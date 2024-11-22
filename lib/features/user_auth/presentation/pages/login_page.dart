@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
-      Navigator.pushNamed(context, "/home");
+      Navigator.pushNamed(context, "/mainpage");
     } else {
       showToast(message: "some error occured");
     }
