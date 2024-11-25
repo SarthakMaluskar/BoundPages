@@ -4,7 +4,7 @@ import 'package:boundpages_final/features/user_auth/presentation/pages/mainpage.
 import 'package:boundpages_final/features/user_auth/presentation/pages/books_page.dart'; // Import your BooksPage
 import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/notifications_page.dart'; // Import your NotificationsPage
-
+import 'package:boundpages_final/features/user_auth/presentation/pages/cart_page.dart';
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -38,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => BooksPage()),
+          MaterialPageRoute(builder: (context) => CartPage()),
         );
         break;
       case 3:
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Books'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
           BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],

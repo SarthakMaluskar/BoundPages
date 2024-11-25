@@ -179,8 +179,8 @@ class _ProfilepageState extends State<Profilepage> {
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Books',
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),

@@ -5,6 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart'; // Ensure this import is correct
 import 'package:boundpages_final/features/user_auth/presentation/pages/settings_page.dart'; // Ensure this import is correct
 import 'package:boundpages_final/features/user_auth/presentation/pages/GenreBooksPage.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/cart_page.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/notifications_page.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart'; // Ensure this import is correct
+import 'package:boundpages_final/features/user_auth/presentation/pages/settings_page.dart'; // Ensure this import is correct
+import 'package:boundpages_final/features/user_auth/presentation/pages/GenreBooksPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import'reading_time_manager.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,10 +24,63 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  late String userId;
+  late ReadingTimerManager _readingTimerManager;
+  int _currentReadingTime = 0; // Holds the current reading time in seconds
   List<dynamic> _bookResults = [];
   bool _isLoading = false;
-  int _selectedIndex = 0; // Declare selectedIndex variable
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserId(); // Fetch the user ID
+  }
+
+  // Fetch the authenticated user's ID and initialize the ReadingTimerManager
+  Future<void> _initializeUserId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user.uid; // Assign the user's UID
+      });
+      _readingTimerManager = ReadingTimerManager(userId: userId);
+      _fetchLiveCurrentReadingTime(); // Fetch the current reading time
+    } else {
+      // Handle the case where the user is not logged in
+      // For example, navigate to a login screen
+      print('User not logged in');
+    }
+  }
+
+  // Fetch the current reading time from Firestore
+  void _fetchLiveCurrentReadingTime() {
+    FirebaseFirestore.instance
+        .collection('reading_sessions')
+        .doc(userId)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        final data = snapshot.data()!;
+        final liveCurrentTime = data['current_time'] ?? 0;
+
+        setState(() {
+          _currentReadingTime = liveCurrentTime; // Update the UI with the live time
+        });
+      }
+    });
+  }
+
+
+  // Convert seconds to a readable format
+  String _formatReadingTime(int seconds) {
+    final minutes = (seconds / 60).floor();
+    final hours = (minutes / 60).floor();
+    return hours > 0
+        ? '${hours}h ${minutes % 60}m'
+        : '${minutes}m ${seconds % 60}s';
+  } // Declare selectedIndex variable
 
   // Function to fetch books using Google Books API
   Future<void> _searchBooks(String query) async {
@@ -191,7 +256,7 @@ class _MainPageState extends State<MainPage> {
                               Icon(Icons.timer, color: Colors.yellow),
                               SizedBox(height: 5),
                               Text('Minutes Read', style: TextStyle(color: Colors.white)),
-                              Text('120 min', style: TextStyle(color: Colors.white)),
+                              Text(_formatReadingTime(_currentReadingTime), style: TextStyle(color: Colors.white)),
                             ],
                           ),
                           Column(
@@ -349,10 +414,17 @@ class _MainPageState extends State<MainPage> {
                 );
                 break;
               case 2:
-              // Books Page - Add your books page here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartPage()),
+                );
+
                 break;
               case 3:
-              // Notification Page - Add your notification page here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationsPage()),
+                );
                 break;
               case 4:
                 Navigator.push(
@@ -372,8 +444,8 @@ class _MainPageState extends State<MainPage> {
               label: 'Profile',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              label: 'Books',
+              icon: Icon(Icons.shopping_cart),
+              label: 'Cart',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
