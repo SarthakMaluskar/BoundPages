@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/settings_page.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/cart_page.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/notifications_page.dart';
 
 class Profilepage extends StatefulWidget {
   @override
@@ -71,13 +74,20 @@ class _ProfilepageState extends State<Profilepage> {
       // Already on Profile page, no need to navigate
         break;
       case 2:
-        Navigator.pushNamed(context, '/books'); // Navigate to Books page
-        break;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CartPage()),
+        );
       case 3:
-        Navigator.pushNamed(context, '/notifications'); // Navigate to Notifications page
-        break;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationsPage()),
+        );
       case 4:
-        Navigator.pushNamed(context, '/settings'); // Navigate to Settings page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage()),
+        );// Navigate to Settings page
         break;
     }
   }

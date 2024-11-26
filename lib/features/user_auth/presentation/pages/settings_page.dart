@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:boundpages_final/features/user_auth/presentation/pages/mainpage.dart'; // Make sure to import your ProfilePage
-import 'package:boundpages_final/features/user_auth/presentation/pages/books_page.dart'; // Import your BooksPage
+import 'package:boundpages_final/features/user_auth/presentation/pages/mainpage.dart'; // Make sure to import your MainPage
 import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/notifications_page.dart'; // Import your NotificationsPage
 import 'package:boundpages_final/features/user_auth/presentation/pages/cart_page.dart';
+import 'package:boundpages_final/features/user_auth/presentation/pages/about.dart'; // Import your AboutPage
+
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool isDarkMode = true; // Toggle for Dark/Light Mode
-
   int _selectedIndex = 4; // Ensure Settings page is selected by default
 
   // Method to handle navigation based on the selected index
@@ -78,47 +77,13 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.favorite, color: Colors.white), // Favorites icon
-            title: Text('Favorites', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              // Navigate to Favorites page
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.download, color: Colors.white), // Downloads icon
-            title: Text('Downloads', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              // Navigate to Downloads page
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.brightness_6, color: Colors.white), // Dark/Light Mode icon
-            title: Text('Dark/Light Mode', style: TextStyle(color: Colors.white)),
-            trailing: Switch(
-              value: isDarkMode,
-              onChanged: (value) {
-                setState(() {
-                  isDarkMode = value; // Toggle dark/light mode
-                  // Add functionality to change the theme
-                });
-              },
-              activeColor: Colors.white,
-              inactiveThumbColor: Colors.grey,
-              inactiveTrackColor: Colors.white70,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.language, color: Colors.white), // Language icon
-            title: Text('Language', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              // Navigate to Language settings
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.info, color: Colors.white), // About icon
             title: Text('About', style: TextStyle(color: Colors.white)),
             onTap: () {
-              // Navigate to About page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutPage()), // Navigate to AboutPage
+              );
             },
           ),
           ListTile(
