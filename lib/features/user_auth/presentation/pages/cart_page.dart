@@ -3,15 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
-
-// Import other pages for navigation
 import 'MainPage.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/profile_page.dart';
-import 'package:boundpages_final/features/user_auth/presentation/pages/cart_page.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/notifications_page.dart';
 import 'package:boundpages_final/features/user_auth/presentation/pages/settings_page.dart';
 
 class CartPage extends StatefulWidget {
+  final int? discount; // Optional discount parameter
+
+  CartPage({this.discount});
+
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -250,7 +251,8 @@ class _CartPageState extends State<CartPage> {
         var cartItems = snapshot.data!.docs;
         double subTotal = cartItems.fold(0, (sum, item) => sum + item['price']);
         double gst = subTotal * 0.18; // 18% GST
-        double total = subTotal + gst;
+        double discount = widget.discount != null ? subTotal * widget.discount! / 100 : 0;
+        double total = subTotal + gst - discount;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,6 +281,14 @@ class _CartPageState extends State<CartPage> {
                 Text("₹${gst.toStringAsFixed(2)}", style: GoogleFonts.poppins(color: Colors.white)),
               ],
             ),
+            if (widget.discount != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Discount (${widget.discount}%)", style: GoogleFonts.poppins(color: Colors.green)),
+                  Text("-₹${discount.toStringAsFixed(2)}", style: GoogleFonts.poppins(color: Colors.green)),
+                ],
+              ),
             SizedBox(height: size.height * 0.015),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

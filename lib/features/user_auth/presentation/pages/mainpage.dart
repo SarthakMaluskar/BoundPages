@@ -16,6 +16,7 @@ import 'package:boundpages_final/features/user_auth/presentation/pages/settings_
 import 'package:boundpages_final/features/user_auth/presentation/pages/GenreBooksPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:boundpages_final/features/user_auth/presentation/pages/RewardsPage.dart';
 import'reading_time_manager.dart';
 
 class MainPage extends StatefulWidget {
@@ -54,6 +55,7 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+
   // Fetch the current reading time from Firestore
   void _fetchLiveCurrentReadingTime() {
     FirebaseFirestore.instance
@@ -81,6 +83,23 @@ class _MainPageState extends State<MainPage> {
         ? '${hours}h ${minutes % 60}m'
         : '${minutes}m ${seconds % 60}s';
   } // Declare selectedIndex variable
+
+  Stream<QuerySnapshot> _getRewardCouponsStream() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Replace 'rewards' with your Firestore collection name for coupons
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('rewards')
+          .snapshots();
+    } else {
+      throw Exception('User not logged in');
+    }
+  }
+
+
 
   // Function to fetch books using Google Books API
   Future<void> _searchBooks(String query) async {
@@ -248,7 +267,7 @@ class _MainPageState extends State<MainPage> {
                               Icon(Icons.local_fire_department, color: Colors.orange),
                               SizedBox(height: 5),
                               Text('Streak', style: TextStyle(color: Colors.white)),
-                              Text('10 Days', style: TextStyle(color: Colors.white)),
+                              Text('9 Days', style: TextStyle(color: Colors.white)),
                             ],
                           ),
                           Column(
@@ -259,21 +278,54 @@ class _MainPageState extends State<MainPage> {
                               Text(_formatReadingTime(_currentReadingTime), style: TextStyle(color: Colors.white)),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Icon(Icons.bookmark, color: Colors.green),
-                              SizedBox(height: 5),
-                              Text('Key Points', style: TextStyle(color: Colors.white)),
-                              Text('5', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Icon(Icons.insights, color: Colors.blue),
-                              SizedBox(height: 5),
-                              Text('Insights', style: TextStyle(color: Colors.white)),
-                              Text('3', style: TextStyle(color: Colors.white)),
-                            ],
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[850], // Button background color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10), // Rounded corners
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => RewardsPage()),
+                              );
+                              print('Rewards button clicked!');
+                            },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // Keeps the column compact
+                              children: [
+                                Icon(Icons.wallet_giftcard, color: Colors.green),
+                                SizedBox(height: 5),
+                                Text('Rewards', style: TextStyle(color: Colors.white)),
+                                StreamBuilder<QuerySnapshot>(
+                                  stream: _getRewardCouponsStream(), // Function to fetch the stream of rewards
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Text(
+                                        '...',
+                                        style: TextStyle(color: Colors.white),
+                                      ); // Show a placeholder while loading
+                                    }
+                                    if (snapshot.hasError || !snapshot.hasData) {
+                                      return Text(
+                                        '0',
+                                        style: TextStyle(color: Colors.white),
+                                      ); // Show 0 if there's an error or no data
+                                    }
+
+                                    // Get the count of reward coupons
+                                    int rewardCount = snapshot.data!.docs.length;
+                                    return Text(
+                                      '$rewardCount', // Show the real-time count
+                                      style: TextStyle(color: Colors.white),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+
                           ),
                         ],
                       ),
